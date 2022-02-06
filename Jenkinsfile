@@ -1,3 +1,11 @@
+properties = null
+
+def loadProperties() {
+    node {
+        checkout scm
+        properties = readProperties file: 'version.properties'
+    }
+}
 pipeline {
     agent any
     options {
@@ -7,15 +15,14 @@ pipeline {
            stage("reading properties from properties file") {
                steps {
                     script {
-                    def props = readProperties file: 'version.properties' 
-                    env.Version = props.version
+                        loadProperties()
                    }
-                echo "The username  is $Version"
+                echo "The username  is ${properties.version}"
                }
            }
         stage('Example') {
             steps {
-                echo 'Hello World $Version'
+                echo "${properties.version}"
             }
         }
     }
